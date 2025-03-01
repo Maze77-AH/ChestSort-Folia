@@ -73,11 +73,6 @@
                         </relocation>
 
                         <relocation>
-                            <pattern>com.jeff_media.updatechecker</pattern>
-                            <shadedPattern>de.jeff_media.chestsort.updatechecker</shadedPattern>
-                        </relocation>
-
-                        <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>de.jeff_media.chestsort.bstats</shadedPattern>
                         </relocation>
@@ -195,18 +190,12 @@
 
     <dependencies>
 
+            <!-- Folia for 1.21.4-SNAPSHOT (custom) -->
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <groupId>dev.folia</groupId>
+            <artifactId>folia-api</artifactId>
+            <version>1.21.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.jeff_media</groupId>
-            <artifactId>SpigotUpdateChecker</artifactId>
-            <version>2.2.0</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -276,13 +265,6 @@
             <artifactId>Slimefun4</artifactId>
             <version>RC-37</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.papermc</groupId>
-            <artifactId>paperlib</artifactId>
-            <version>1.0.6</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>

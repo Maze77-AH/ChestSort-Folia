@@ -1,6 +1,8 @@
 package de.jeff_media.chestsort.data;
 
 import de.jeff_media.chestsort.ChestSortPlugin;
+import de.jeff_media.chestsort.data.PlayerSetting.DoubleClickType;
+
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
@@ -62,7 +64,7 @@ public class PlayerSetting {
 		}
 		if(currentDoubleClick != click) {
 			currentDoubleClick = click;
-			Bukkit.getScheduler().runTaskLater(plugin, () -> currentDoubleClick = DoubleClickType.NONE, 10);
+		Bukkit.getGlobalRegionScheduler().runDelayed(plugin, scheduledTask -> {currentDoubleClick = DoubleClickType.NONE;}, 10L);
 			return DoubleClickType.NONE;
 		}
 		return DoubleClickType.NONE;

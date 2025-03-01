@@ -28,7 +28,6 @@
 package de.jeff_media.chestsort;
 
 import at.pcgamingfreaks.Minepacks.Bukkit.API.MinepacksPlugin;
-import com.jeff_media.updatechecker.UpdateChecker;
 import de.jeff_media.chestsort.commands.ChestSortCommand;
 import de.jeff_media.chestsort.commands.InvSortCommand;
 import de.jeff_media.chestsort.commands.TabCompleter;
@@ -54,7 +53,6 @@ import de.jeff_media.chestsort.utils.Utils;
 import com.jeff_media.jefflib.JeffLib;
 import com.jeff_media.jefflib.data.McVersion;
 import com.jeff_media.jefflib.NBTAPI;
-import io.papermc.lib.PaperLib;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -95,7 +93,6 @@ public class ChestSortPlugin extends JavaPlugin {
     private ChestSortPermissionsHandler permissionsHandler;
     private SettingsGUI settingsGUI;
     private String sortingMethod;
-    private UpdateChecker updateChecker;
     private boolean usingMatchingConfig = true;
     private boolean verbose = true;
     private YamlConfiguration guiConfig = new YamlConfiguration();
@@ -322,14 +319,6 @@ public class ChestSortPlugin extends JavaPlugin {
         this.sortingMethod = sortingMethod;
     }
 
-    public UpdateChecker getUpdateChecker() {
-        return updateChecker;
-    }
-
-    public void setUpdateChecker(UpdateChecker updateChecker) {
-        this.updateChecker = updateChecker;
-    }
-
     public boolean isDebug() {
         return debug;
     }
@@ -423,9 +412,6 @@ public class ChestSortPlugin extends JavaPlugin {
         if (reload) {
             unregisterAllPlayers();
             reloadConfig();
-            if (getUpdateChecker() != null) {
-                getUpdateChecker().stop();
-            }
         }
 
         createConfig();
@@ -471,23 +457,6 @@ public class ChestSortPlugin extends JavaPlugin {
         new Messages();
         setOrganizer(new ChestSortOrganizer(this));
         setSettingsGUI(new SettingsGUI(this));
-        try {
-            if (Class.forName("net.md_5.bungee.api.chat.BaseComponent") != null) {
-                setUpdateChecker(UpdateChecker.init(this, "https://api.jeff-media.de/chestsort/chestsort-latest-version.txt")
-                        .setChangelogLink("https://www.chestsort.de/changelog")
-                        .setDonationLink("https://paypal.me/mfnalex")
-                        .setDownloadLink("https://www.chestsort.de")
-                        .suppressUpToDateMessage(true));
-            } else {
-                getLogger().severe("You are using an unsupported server software! Consider switching to Spigot or Paper!");
-                getLogger().severe("The Update Checker will NOT work when using CraftBukkit instead of Spigot/Paper!");
-                PaperLib.suggestPaper(this);
-            }
-        } catch (ClassNotFoundException e) {
-            getLogger().severe("You are using an unsupported server software! Consider switching to Spigot or Paper!");
-            getLogger().severe("The Update Checker will NOT work when using CraftBukkit instead of Spigot/Paper!");
-            PaperLib.suggestPaper(this);
-        }
         setListener(new ChestSortListener(this));
         setHotkeyCooldown(new HashMap<>());
         setPermissionsHandler(new ChestSortPermissionsHandler(this));
@@ -535,19 +504,6 @@ public class ChestSortPlugin extends JavaPlugin {
                 getLogger().info("Check interval: " + getConfig().getString("check-interval") + " hours (" + getUpdateCheckInterval() + " seconds)");
             }
             getLogger().info("Categories: " + getCategoryList());
-        }
-
-        if (getUpdateChecker() != null) {
-            if (getConfig().getString("check-for-updates", "true").equalsIgnoreCase("true")) {
-                getUpdateChecker().checkEveryXHours(getUpdateCheckInterval()).checkNow();
-            } // When set to on-startup, we check right now (delay 0)
-            else if (getConfig().getString("check-for-updates", "true").equalsIgnoreCase("on-startup")) {
-                getUpdateChecker().checkNow();
-            }
-        }
-
-        if (getConfig().getString("check-for-updates").equalsIgnoreCase("false")) {
-            getUpdateChecker().setNotifyOpsOnJoin(false);
         }
 
         registerMetrics();
